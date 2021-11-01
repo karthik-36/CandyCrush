@@ -1,0 +1,41 @@
+.grid{
+    text-align: center;
+    height : 320px;
+    width : 320px;
+    display : flex;
+    flex-wrap: wrap;
+    background-color: white;
+}
+
+#newGame {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    border: 3px solid green;
+    vertical-align: middle;
+  }
+
+.grid div{
+    height : 32px;
+    width : 32px;
+}
+
+
+.table{
+   text-align: center;
+}
+
+.td{
+    height : 42px;
+    width : 42px;  
+}
+
+#mainColumn {
+    height: 500px;
+  }
+
+#lastColumn {
+   
+}
+  
