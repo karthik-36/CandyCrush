@@ -1,0 +1,13 @@
+.grid{
+    height : 700px;
+    width : 700px;
+    display : flex;
+    flex-wrap: wrap;
+    background-color: blue;
+}
+
+
+.grid div{
+    height : 70px;
+    width : 70px;
+}
