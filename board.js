@@ -338,27 +338,22 @@ var Board = function (size) {
   }
 }
 
-
-
-
-const width = 8;
-let letterRow = ['a','b','c','d','e','f','g','h','i','j'];
-let newBoard = new Board(width);
-
+const width = 8
+let letterRow = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
+let newBoard = new Board(width)
 
 document.addEventListener('DOMContentLoaded', () => {
-
   createBoard()
+  checkStability(newBoard)
 })
-
 
 function createBoard() {
   const table = document.querySelector('.candyMain')
 
   //const squares = []
- // let score = 0
+  // let score = 0
 
- // const candyColors = ['red', 'yellow', 'orange', 'purple', 'green', 'blue']
+  // const candyColors = ['red', 'yellow', 'orange', 'purple', 'green', 'blue']
 
   for (let i = 0; i < width; i++) {
     const row = document.createElement('tr')
@@ -367,7 +362,7 @@ function createBoard() {
       let td = document.createElement('td')
       tr.appendChild(td)
       td.setAttribute('id', i + '' + j)
-      td.innerHTML =   letterRow[j] + '' + (i+1)
+      td.innerHTML = letterRow[j] + '' + (i + 1)
 
       td.style.height = '50px'
       td.style.width = '50px'
@@ -375,26 +370,206 @@ function createBoard() {
       td.style.border = '5px solid white'
       td.style.borderRadius = '10px 10px 10px 10px'
       td.style.textAlign = 'center'
-      
+
       if (board.getCandyAt(i, j) == null) {
         newBoard.addRandomCandy(i, j, i, j)
       }
-      td.style.backgroundColor = newBoard.getCandyAt(i, j).color;
+      td.style.backgroundColor = newBoard.getCandyAt(i, j).color
     }
-
-
   }
 }
 
 function newGame() {
-  newBoard.clear();
-  const table = document.querySelector('.candyMain');
-  table.innerHTML = '';
-  createBoard();
-  console.log(newBoard.getAllCandies());
+  newBoard.clear()
+  const table = document.querySelector('.candyMain')
+  table.innerHTML = ''
+  createBoard()
+  // console.log(newBoard.getAllCandies());
+  checkStability(newBoard)
 }
 
-function checkStability(){
+function checkStability(newBoard) {
+  // console.log("here " + width);
+  //  five
+  function checkRowForFive() {
+    for (let i = 0; i < width; i++) {
+      for (let j = 0; j < width - 4; j++) {
+        let currCandy = newBoard.getCandyAt(i, j)
+        let rowOfFive = [j, j + 1, j + 2, j + 3, j + 4]
+        let decidedColor = newBoard.getCandyAt(i, j).color
+        const isBlank = decidedColor === 'white'
+        if (
+          rowOfFive.every(
+            (jRow) =>
+              newBoard.getCandyAt(i, jRow).color == decidedColor && !isBlank,
+          )
+        ) {
+          rowOfFive.forEach((jRow) => {
+            newBoard.getCandyAt(i, jRow).color = 'white'
+          })
+        }
+      }
+    }
+  }
+
+  function checkColumnForFive() {
+    for (let i = 0; i < width - 4; i++) {
+      for (let j = 0; j < width; j++) {
+        let columnOfFive = [
+          i,
+          i + width,
+          i + 2 * width,
+          i + 3 * width,
+          i + 4 * width,
+        ]
+        let decidedColor = newBoard.getCandyAt(i, j).color
+        const isBlank = decidedColor === 'white'
+        if (
+          columnOfFive.every(
+            (iCol) =>{
+              console.log(iCol,j);
+              newBoard.getCandyAt(iCol, j).color == decidedColor && !isBlank
+            }
+          )
+        ) {
+          columnOfFive.forEach(
+            (iCol) =>
+            newBoard.getCandyAt(iCol, j).color = 'white'
+          )
+        }
+      }
+    }
+  }
+
+  // four
+
+  function checkRowForFour() {
+    for (let i = 0; i < width; i++) {
+      for (let j = 0; j < width - 3; j++) {
+        let currCandy = newBoard.getCandyAt(i, j)
+        let rowOfFour = [j, j + 1, j + 2, j + 3]
+        let decidedColor = newBoard.getCandyAt(i, j).color
+        const isBlank = decidedColor === 'white'
+        if (
+          rowOfFour.every(
+            (jRow) =>
+              newBoard.getCandyAt(i, jRow).color == decidedColor && !isBlank,
+          )
+        ) {
+          rowOfFour.forEach((jRow) => {
+            newBoard.getCandyAt(i, jRow).color = 'white'
+          })
+        }
+      }
+    }
+  }
 
 
+
+  function checkColumnForFour() {
+    for (let i = 0; i < width - 3; i++) {
+      for (let j = 0; j < width; j++) {
+        let columnOfFour = [
+          i,
+          i + 1,
+          i + 2,
+          i + 3,
+        ]
+        let decidedColor = newBoard.getCandyAt(i, j).color;
+        const isBlank = decidedColor === 'white';
+        if (
+          columnOfFour.every(
+            (iCol) =>{
+             return newBoard.getCandyAt(iCol, j).color == decidedColor && (isBlank !== 'white')
+            }
+          )
+        ) {
+          columnOfFour.forEach(
+            (iCol) =>
+            newBoard.getCandyAt(iCol, j).color = 'white'
+          )
+        }
+      }
+    }
+  }
+
+
+  // three
+
+  function checkRowForThree() {
+    for (let i = 0; i < width; i++) {
+      for (let j = 0; j < width - 2; j++) {
+        //  console.log("i j " , i , '',j);
+        //   console.log(newBoard.getCandyAt(i,j));
+        let currCandy = newBoard.getCandyAt(i, j)
+        let rowOfThree = [j, j + 1, j + 2]
+        let decidedColor = newBoard.getCandyAt(i, j).color
+        //  console.log(decidedColor);
+        const isBlank = decidedColor === 'white'
+        if (
+          rowOfThree.every(
+            (jRow) =>
+              newBoard.getCandyAt(i, jRow).color == decidedColor && !isBlank,
+          )
+        ) {
+          rowOfThree.forEach((jRow) => {
+            newBoard.getCandyAt(i, jRow).color = 'white'
+          })
+        }
+      }
+    }
+  }
+
+
+  function checkColumnForThree() {
+    for (let i = 0; i < width - 2; i++) {
+      for (let j = 0; j < width; j++) {
+        let columnOfThree = [
+          i,
+          i + 1,
+          i + 2,
+        ]
+        console.log(" columnOfThree " , columnOfThree);
+        // columnOfThree.every(
+        //   (jCol) =>{
+        //     console.log("here  " , i,jCol);
+        //     return true;
+        //   }
+        // )
+        let decidedColor = newBoard.getCandyAt(i, j).color;
+        const isBlank = decidedColor === 'white';
+        if (
+          columnOfThree.every(
+            (iCol) =>{
+             // console.log("here  3c " , iCol, j , newBoard.getCandyAt(iCol,j).color );
+             return newBoard.getCandyAt(iCol, j).color == decidedColor && (isBlank !== 'white')
+            }
+          )
+        ) {
+          console.log("yes yes yes col 3");
+          columnOfThree.forEach(
+            (iCol) =>
+            newBoard.getCandyAt(iCol, j).color = 'white'
+          )
+        }
+      }
+    }
+  }
+
+   checkRowForFive()
+
+
+   checkRowForFour()
+   checkColumnForFour()
+
+   checkRowForThree()
+   checkColumnForThree()
+
+  //copy over board to html
+  for (let i = 0; i < width; i++) {
+    for (let j = 0; j < width; j++) {
+      let td = document.getElementById(i + '' + j)
+      td.style.backgroundColor = newBoard.getCandyAt(i, j).color
+    }
+  }
 }
