@@ -409,7 +409,8 @@ function createBoard() {
 }
 
 function newGame() {
-  newBoard.clear()
+  newBoard.clear();
+  makeGreyArrow();
   const table = document.querySelector('.candyMain')
   table.innerHTML = '';
   document.getElementById('mInput').value = '';
@@ -420,6 +421,7 @@ function newGame() {
 
 function reply_click(clicked_id)
 {
+  
   let directionBtn = document.getElementById(clicked_id);
   if(inputField.length == 0 || inputField.length == 1){
     alert("choose a valid input first");
@@ -458,8 +460,9 @@ function reply_click(clicked_id)
 
 
     applyBoardStyle(newBoard);
+    document.getElementById('mInput').value = '';
   }
-
+  
 }
 
 
@@ -487,7 +490,6 @@ function CheckInput(e) {
   inputField = iVal;
 
   if(inputField.length == 0 || inputField == 1){
-    console.log('1111');
     makeGreyArrow()
   }
 
@@ -536,13 +538,10 @@ function CheckInput(e) {
 
   } else if (iVal.length == 2) {
     alert("input not valid try again \n first letter a - h , second number 1 - 8");
-    console.log('1111');
     makeGreyArrow()
     document.getElementById('mInput').value = '';
   }
   else{
-      
-    console.log('1111');
       makeGreyArrow();
       
   }
@@ -753,6 +752,7 @@ function isBoardStable(newBoard) {
     for (let j = 0; j < width; j++) {
       if(newBoard.getCandyAt(i,j) == 'white'){
         stable = false;
+        return stable;
       }
     }
   }
@@ -771,6 +771,7 @@ function isBoardStable(newBoard) {
           )
         ) {
           stable = false;
+          return stable;
         }
       }
     }
@@ -797,6 +798,7 @@ function isBoardStable(newBoard) {
           )
         ) {
           stable = false;
+          return stable;
         }
       }
     }
@@ -819,6 +821,7 @@ function isBoardStable(newBoard) {
           )
         ) {
           stable = false;
+          return stable;
         }
       }
     }
@@ -845,6 +848,7 @@ function isBoardStable(newBoard) {
           )
         ) {
           stable = false;
+          return stable;
         }
       }
     }
@@ -867,6 +871,7 @@ function isBoardStable(newBoard) {
           )
         ) {
           stable = false;
+          return stable;
         }
       }
     }
@@ -890,8 +895,8 @@ function isBoardStable(newBoard) {
             }
           )
         ) {
-         // console.log("yes yes yes col 3");
             stable = false;
+            return stable;
         }
       }
     }
@@ -953,21 +958,23 @@ function crushOnce(id){
   setTimeout(function(){
     fillRandomAll(newBoard);
     makeBoardStable(newBoard);
-    console.log('4444');
- 
+    let interval1 = setInterval(() => {
+      if(!isStable){
+      fillRandomAll(newBoard);
+      //makeBoardStable(newBoard);
+      }else{
+        isStable = true;
+        makeGreyArrow();
+        clearInterval(interval1);
 
+
+        // make cursor go to move
+        document.getElementById("mInput").focus();
+      }
+    }, 500);
   },500)
 
-   let interval1 = setInterval(() => {
-    if(!isStable){
-    fillRandomAll(newBoard);
-    makeBoardStable(newBoard);
-    }else{
-      isStable = true;
-      makeGreyArrow();
-      clearInterval(interval1);
-    }
-  }, 500);
+
 }
 
 
@@ -980,9 +987,6 @@ window.setInterval(function () {
 }, 40)
 
 window.setInterval(function () {
-  //fillRandomAll(newBoard);
- 
- // isStable = isBoardStable(newBoard) ;
    console.log("isStable : " , isStable);
    if(!isStable && firstTime){
     fillRandomAll(newBoard);
@@ -995,9 +999,6 @@ window.setInterval(function () {
 
 
 
-// for (index = 0; index < allInputs.length; ++index) {
-//   console.log(allInputs[index].disabled = false);
-// }
 window.setInterval(function () {
   let lastColumn = document.getElementById('lastColumn');
   let allInputs = lastColumn.getElementsByTagName('input');
