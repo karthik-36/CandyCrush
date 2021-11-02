@@ -157,8 +157,8 @@ Collaborators:
            
                 <input
                   type="text"
-                  id="moveInput"
-                  maxlength="3"
+                  id="mInput"
+                  maxlength="2"
                   value=""
                   oninput="CheckInput()"
                 />
@@ -175,6 +175,7 @@ Collaborators:
                       type="button"
                       id="up"
                       value="&uarr;"
+                      onClick="reply_click(this.id)"
                     />
                   </td>
                   <td></td>
@@ -186,6 +187,7 @@ Collaborators:
                       type="button"
                       id="left"
                       value="&larr;"
+                      onClick="reply_click(this.id)"
                     />
                   </td>
                   <td></td>
@@ -195,6 +197,7 @@ Collaborators:
                       type="button"
                       id="right"
                       value="&rarr;"
+                      onClick="reply_click(this.id)"
                     />
                   </td>
                 </tr>
@@ -206,6 +209,7 @@ Collaborators:
                       type="button"
                       id="down"
                       value="&darr;"
+                      onClick="reply_click(this.id)"
                     />
                   </td>
                   <td></td>
