@@ -1,11 +1,4 @@
-.grid{
-    text-align: center;
-    height : 320px;
-    width : 320px;
-    display : flex;
-    flex-wrap: wrap;
-    background-color: white;
-}
+
 
 #newGame {
     display: flex;
@@ -16,10 +9,7 @@
     vertical-align: middle;
   }
 
-.grid div{
-    height : 32px;
-    width : 32px;
-}
+
 
 
 .table{

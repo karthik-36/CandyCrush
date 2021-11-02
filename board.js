@@ -421,7 +421,7 @@ function newGame() {
 
 function reply_click(clicked_id)
 {
-  
+  console.log("inputField", inputField);
   let directionBtn = document.getElementById(clicked_id);
   if(inputField.length == 0 || inputField.length == 1){
     alert("choose a valid input first");
@@ -465,20 +465,52 @@ function reply_click(clicked_id)
   
 }
 
+function disableArrow(){
+  let up = document.getElementById('up');
+  up.disabled = true;
+
+  let down = document.getElementById('down');
+  down.disabled = true;
+
+
+  let left = document.getElementById('left');
+  left.disabled = true;
+
+  let right = document.getElementById('right');
+  right.disabled = true;
+}
+
+function enableArrow(){
+  let up = document.getElementById('up');
+  up.disabled = false;
+
+  let down = document.getElementById('down');
+  down.disabled = false;
+
+
+  let left = document.getElementById('left');
+  left.disabled = false;
+
+  let right = document.getElementById('right');
+  right.disabled = false;
+};
 
 function makeGreyArrow(){
     let up = document.getElementById('up');
     up.style.backgroundColor = '#e3dede' ;
+    up.setAttribute("disabled","true");
 
     let down = document.getElementById('down');
     down.style.backgroundColor = '#e3dede' ;
-  
+    down.setAttribute("disabled","disabled");
 
     let left = document.getElementById('left');
     left.style.backgroundColor = '#e3dede' ;
+    left.setAttribute("disabled","disabled");
   
     let right = document.getElementById('right');
     right.style.backgroundColor = '#e3dede' ;
+    right.setAttribute("disabled","disabled");
 }
 
 function CheckInput(e) {
@@ -490,6 +522,7 @@ function CheckInput(e) {
   inputField = iVal;
 
   if(inputField.length == 0 || inputField == 1){
+   // disableArrow()
     makeGreyArrow()
   }
 
@@ -509,7 +542,7 @@ function CheckInput(e) {
          
 
               for(let d = 0 ; d < directions.length ; d++){
-                
+                //enableArrow();
                 if(directions[d] == 'up'){
                   let left = document.getElementById('up');
                   left.style.backgroundColor = 'green' ;
@@ -966,7 +999,7 @@ function crushOnce(id){
         isStable = true;
         makeGreyArrow();
         clearInterval(interval1);
-
+        inputField = '';
 
         // make cursor go to move
         document.getElementById("mInput").focus();
@@ -978,13 +1011,21 @@ function crushOnce(id){
 }
 
 
-window.setInterval(function () {
-  //fillRandomAll(newBoard);
- 
+window.setInterval(function () { 
   isStable = isBoardStable(newBoard) ;
+ 
+    for (let i = 0; i < width; i++) {
+      for (let j = 0; j < width ; j++) {
+        let td = document.getElementById(i + '' + j);
+        if(td.style.backgroundColor == 'rgb(255, 223, 5)'){
+            td.style.color = 'grey';
+        }else{
+          td.style.color = 'white';
+        }
+      }
+    }
 
-  
-}, 40)
+}, 20)
 
 window.setInterval(function () {
    console.log("isStable : " , isStable);
@@ -1008,9 +1049,7 @@ window.setInterval(function () {
       allInputs[index].disabled = false;
     }
     cOnce.disabled = true;
-  }else{
-  
-    
+  }else{  
     for (index = 0; index < allInputs.length; ++index) {
       allInputs[index].disabled = true;
     }
