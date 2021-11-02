@@ -365,18 +365,20 @@ var Board = function (size) {
   }
 }
 
-
+let fullId = '';
 let inputField = '';
 let firstTime = true;
 const width = 8;
 let isStable = false;
-let letterRow = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
-let newBoard = new Board(width)
+let letterRow = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+let newBoard = new Board(width);
+let rule = new Rules(newBoard);
 
 document.addEventListener('DOMContentLoaded', () => {
   createBoard()
   makeBoardStable(newBoard);
   fillRandomAll(newBoard);
+  
 })
 
 function createBoard() {
@@ -410,6 +412,7 @@ function newGame() {
   newBoard.clear()
   const table = document.querySelector('.candyMain')
   table.innerHTML = '';
+  document.getElementById('mInput').value = '';
   firstTime = true;
   createBoard();
   makeBoardStable(newBoard);
@@ -417,27 +420,131 @@ function newGame() {
 
 function reply_click(clicked_id)
 {
-  console.log(clicked_id);
+  let directionBtn = document.getElementById(clicked_id);
+  if(inputField.length == 0 || inputField.length == 1){
+    alert("choose a valid input first");
+  }
+  else if(directionBtn.style.backgroundColor != 'green'){
+    alert("you can choose only the green moves!");
+  }
+  else if (directionBtn.style.backgroundColor == 'green'){
+    console.log(directionBtn.id);
+    if(directionBtn.id == 'down'){
+      console.log(inputField , fullId)
+      console.log(newBoard.getCandyAt(parseInt(fullId[0]) , parseInt(fullId[1])))
+
+      let tempColor = newBoard.getCandyAt(parseInt(fullId[0]) , parseInt(fullId[1])).color;
+      newBoard.getCandyAt(parseInt(fullId[0]) , parseInt(fullId[1])).color = newBoard.getCandyAt(parseInt(fullId[0]) + 1, parseInt(fullId[1])).color;
+      newBoard.getCandyAt(parseInt(fullId[0])+1 , parseInt(fullId[1])).color = tempColor;
+    }
+    if(directionBtn.id == 'up'){
+      console.log(inputField , fullId)
+      let tempColor = newBoard.getCandyAt(parseInt(fullId[0]) , parseInt(fullId[1])).color;
+      newBoard.getCandyAt(parseInt(fullId[0]) , parseInt(fullId[1])).color = newBoard.getCandyAt(parseInt(fullId[0]) - 1, parseInt(fullId[1])).color;
+      newBoard.getCandyAt(parseInt(fullId[0])-1 , parseInt(fullId[1])).color = tempColor;
+    }
+    if(directionBtn.id == 'left'){
+      console.log(inputField , fullId)
+      let tempColor = newBoard.getCandyAt(parseInt(fullId[0]) , parseInt(fullId[1])).color;
+      newBoard.getCandyAt(parseInt(fullId[0]) , parseInt(fullId[1])).color = newBoard.getCandyAt(parseInt(fullId[0]), parseInt(fullId[1]) - 1).color;
+      newBoard.getCandyAt(parseInt(fullId[0]) , parseInt(fullId[1]) - 1).color = tempColor;
+    }
+    if(directionBtn.id == 'right'){
+      console.log(inputField , fullId)
+      let tempColor = newBoard.getCandyAt(parseInt(fullId[0]) , parseInt(fullId[1])).color;
+      newBoard.getCandyAt(parseInt(fullId[0]) , parseInt(fullId[1])).color = newBoard.getCandyAt(parseInt(fullId[0]), parseInt(fullId[1]) + 1).color;
+      newBoard.getCandyAt(parseInt(fullId[0]) , parseInt(fullId[1]) + 1).color = tempColor;
+    }
+
+
+    applyBoardStyle(newBoard);
+  }
+
+}
+
+
+function makeGreyArrow(){
+    let up = document.getElementById('up');
+    up.style.backgroundColor = '#e3dede' ;
+
+    let down = document.getElementById('down');
+    down.style.backgroundColor = '#e3dede' ;
+  
+
+    let left = document.getElementById('left');
+    left.style.backgroundColor = '#e3dede' ;
+  
+    let right = document.getElementById('right');
+    right.style.backgroundColor = '#e3dede' ;
 }
 
 function CheckInput(e) {
-
-
   function isCharacterALetter(char) {
     return (/[a-zA-Z]/).test(char)
   }
-
-  console.log(document.getElementById('mInput').value);
+  //console.log(document.getElementById('mInput').value);
   let iVal = document.getElementById('mInput').value;
   inputField = iVal;
-  if(iVal.length == 2 && isCharacterALetter(iVal[0]) && Number.isInteger(parseInt(iVal[1])) && Number.isInteger(parseInt(iVal[1])) <= width && iVal[0] < 'i')
-  {
-    console.log("valid input");
-  
 
-  }else if(iVal.length == 2){
+  if(inputField.length == 0 || inputField == 1){
+    console.log('1111');
+    makeGreyArrow()
+  }
+
+  if (iVal.length == 2 && isCharacterALetter(iVal[0]) && Number.isInteger(parseInt(iVal[1])) && parseInt(iVal[1]) <= width && parseInt(iVal[1]) > 0 && iVal[0] < 'i') {
+    // console.log("valid input");
+    let iId;
+    for (let i = 0; i < width; i++) {
+      if (iVal[0] == letterRow[i]) {
+        iId = i;
+        fullId = (parseInt(iVal[1]) - 1) + '' + iId;
+        console.log("fullId ", fullId);
+        let searchArray = rule.getRandomValidMove(); 
+        for( let x = 0 ; x < searchArray.length ; x++){
+          let directions = new Array(4);
+          if(searchArray[x].candy.row  == (parseInt(iVal[1]) - 1)  && searchArray[x].candy.col == iId){
+              directions.push(searchArray[x].direction);
+         
+
+              for(let d = 0 ; d < directions.length ; d++){
+                
+                if(directions[d] == 'up'){
+                  let left = document.getElementById('up');
+                  left.style.backgroundColor = 'green' ;
+                }
+                if(directions[d] == 'down'){
+                  let left = document.getElementById('down');
+                  left.style.backgroundColor = 'green' ;
+                }
+                if(directions[d] == 'left'){
+                  let left = document.getElementById('left');
+                  left.style.backgroundColor = 'green' ;
+                }
+                if(directions[d] == 'right'){
+                  let left = document.getElementById('right');
+                  left.style.backgroundColor = 'green' ;
+                }
+
+                }
+          }
+        }
+        let square = newBoard.getCandyAt((parseInt(iVal[1]) - 1), parseInt(iId));
+        console.log(square.color);
+      }
+    }
+    newBoard.getCandyAt();
+
+  } else if (iVal.length == 2) {
     alert("input not valid try again \n first letter a - h , second number 1 - 8");
+    console.log('1111');
+    makeGreyArrow()
     document.getElementById('mInput').value = '';
+  }
+  else{
+      
+    console.log('1111');
+      makeGreyArrow();
+      
   }
 }
 
@@ -623,6 +730,10 @@ function makeBoardStable(newBoard) {
    checkColumnForThree()
 
   //copy over board to html
+  applyBoardStyle(newBoard);
+}
+
+function applyBoardStyle(newBoard){
   for (let i = 0; i < width; i++) {
     for (let j = 0; j < width; j++) {
       let td = document.getElementById(i + '' + j)
@@ -630,16 +741,6 @@ function makeBoardStable(newBoard) {
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -660,7 +761,6 @@ function isBoardStable(newBoard) {
   function checkRowForFive() {
     for (let i = 0; i < width; i++) {
       for (let j = 0; j < width - 4; j++) {
-        let currCandy = newBoard.getCandyAt(i, j)
         let rowOfFive = [j, j + 1, j + 2, j + 3, j + 4]
         let decidedColor = newBoard.getCandyAt(i, j).color
         const isBlank = decidedColor === 'white'
@@ -819,9 +919,6 @@ function isBoardStable(newBoard) {
 
 function fillRandomAll(newBoard){
 
-
-
-
   for (let i = width-2; i != -1; i--) {
     for (let j = width -1; j != -1; j--) {
       let tdDown = document.getElementById((i+1) + '' + j);
@@ -848,25 +945,46 @@ function fillRandomAll(newBoard){
 
 }
 
+function crushOnce(id){
+
+  document.getElementById('mInput').value = '';
+
+  makeGreyArrow();
+  setTimeout(function(){
+    fillRandomAll(newBoard);
+    makeBoardStable(newBoard);
+    console.log('4444');
+ 
+
+  },500)
+
+   let interval1 = setInterval(() => {
+    if(!isStable){
+    fillRandomAll(newBoard);
+    makeBoardStable(newBoard);
+    }else{
+      isStable = true;
+      makeGreyArrow();
+      clearInterval(interval1);
+    }
+  }, 500);
+}
 
 
 window.setInterval(function () {
   //fillRandomAll(newBoard);
-  
-  let lastColumn = document.getElementById('lastColumn');
-  // console.log(lastColumn);
-  // lastColumn.style.backgroundColor = 'grey';
-
-
-  // Find its child `input` elements
-    allInputs = lastColumn.getElementsByTagName('input');
-    for (index = 0; index < allInputs.length; ++index) {
-      console.log(allInputs[index].disabled = true);
-    }
  
+  isStable = isBoardStable(newBoard) ;
 
-   console.log("isStable : " , isBoardStable(newBoard) );
-   if(!isBoardStable(newBoard) && firstTime){
+  
+}, 40)
+
+window.setInterval(function () {
+  //fillRandomAll(newBoard);
+ 
+ // isStable = isBoardStable(newBoard) ;
+   console.log("isStable : " , isStable);
+   if(!isStable && firstTime){
     fillRandomAll(newBoard);
     makeBoardStable(newBoard);
    }else{
@@ -874,3 +992,33 @@ window.setInterval(function () {
    }
   
 }, 500)
+
+
+
+// for (index = 0; index < allInputs.length; ++index) {
+//   console.log(allInputs[index].disabled = false);
+// }
+window.setInterval(function () {
+  let lastColumn = document.getElementById('lastColumn');
+  let allInputs = lastColumn.getElementsByTagName('input');
+  let cOnce = document.getElementById('crushOnce');
+  if(isStable){
+    for (index = 0; index < allInputs.length; ++index) {
+      allInputs[index].disabled = false;
+    }
+    cOnce.disabled = true;
+  }else{
+  
+    
+    for (index = 0; index < allInputs.length; ++index) {
+      allInputs[index].disabled = true;
+    }
+
+    if(firstTime){
+      cOnce.disabled = true;
+    }else{
+      cOnce.disabled = false;
+    }
+  }
+}, 50)
+

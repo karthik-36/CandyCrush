@@ -238,6 +238,14 @@ var Rules = function(board)
           {
             validMovesThreeCrush.push({candy: fromCandy, direction: direction});
           }
+          if (numCandiesCrushed == 4)
+          {
+            validMovesThreeCrush.push({candy: fromCandy, direction: direction});
+          }
+          if (numCandiesCrushed == 5)
+          {
+            validMovesThreeCrush.push({candy: fromCandy, direction: direction});
+          }
           else if (numCandiesCrushed > 3)
           {
             validMovesMoreThanThreeCrush.push(
@@ -249,10 +257,14 @@ var Rules = function(board)
     // if there are three-crushes possible, prioritize these
     var searchArray = validMovesThreeCrush.length ? validMovesThreeCrush :
       validMovesMoreThanThreeCrush;
+
+      searchArray = validMovesThreeCrush.concat(validMovesMoreThanThreeCrush);
     // If there are no valid moves, return null.
     if (searchArray.length == 0) return null;
     // select a random crush from among the crushes found
-    return searchArray[Math.floor(Math.random() * searchArray.length)];
+    //console.log(searchArray);
+    return searchArray;
+    //return searchArray[Math.floor(Math.random() * searchArray.length)];
   }
 
 
